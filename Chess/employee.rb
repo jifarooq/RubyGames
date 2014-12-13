@@ -1,5 +1,3 @@
-# inheritance practice
-
 class Employee
   attr_reader :salary
   
