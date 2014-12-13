@@ -1,4 +1,5 @@
-week_2
-======
+#Projects
 
-Minesweeper, Chess, Checkers
+- Minesweeper with save/load functionality.  Recursively reveals new tiles
+- Chess
+- Checkers
