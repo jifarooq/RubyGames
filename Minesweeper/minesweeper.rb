@@ -1,7 +1,8 @@
 require 'yaml'
 
 class Board
-  NEIGHBOR_OFFSETS = [ [1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1] ]
+  NEIGHBOR_OFFSETS = [[ 1,  1], [ 1, 0], [ 1, -1], [0, -1], 
+                      [-1, -1], [-1, 0], [-1,  1], [0,  1]]
   attr_reader :grid, :bomb_locations, :neighbors
   
   def initialize(boardsize = 9)
@@ -39,7 +40,7 @@ class Board
       row.each do |tile|
         format_tile( tile )
       end
-      puts
+      puts #blank line
     end
   end
     
@@ -49,7 +50,9 @@ class Board
     self[[x, y]].revealed = true
     return if self[[x, y]].count != 0
 
-    neighbors(coords).each { |neighbor| reveal_tiles(neighbor.coords) unless neighbor.revealed  }
+    neighbors(coords).each do |neighbor| 
+      reveal_tiles(neighbor.coords) unless neighbor.revealed
+    end
   end
 
   private
@@ -68,6 +71,17 @@ class Board
         @grid[x][y].has_bomb = true
       end
     end
+    
+    def fill_bomb_numbers
+      @bomb_locations.each do |coords|
+        x, y = coords.first, coords.last
+        
+        NEIGHBOR_OFFSETS.each do |offset|
+          new_x, new_y = x + offset.first, y + offset.last
+          @grid[new_x][new_y].count += 1 unless off_the_board?(new_x, new_y)
+        end
+      end
+    end
 
     def format_tile(tile)
       if tile.flagged
@@ -78,17 +92,6 @@ class Board
         print tile.count
       else
         print "*"
-      end
-    end
-    
-    def fill_bomb_numbers
-      @bomb_locations.each do |coords|
-        x, y = coords.first, coords.last
-        
-        NEIGHBOR_OFFSETS.each do |offset|
-          new_x, new_y = x + offset.first, y + offset.last
-          @grid[new_x][new_y].count += 1 unless off_the_board?(new_x, new_y)
-        end
       end
     end
 
@@ -103,28 +106,25 @@ class Board
 
       new_neighbors
     end
-
 end
 
 
 class Tile
-  
   attr_accessor :count, :flagged, :has_bomb, :revealed
   attr_reader :coords
   
-  def initialize(x,y)
-    @coords = [x,y]
+  def initialize(x, y)
+    @coords = [x, y]
     @count = 0
     @flagged = false
     @has_bomb = false
     @revealed = false
   end
-  
 end
 
 
 class Player
-  
+
   def initialize(boardsize = 9)
     @move = []
     @grid = Board.new(boardsize)
@@ -155,7 +155,6 @@ class Player
   private
   
     def check_game_over
-
       if @grid.bomb_locations.include?(@move) && !@grid[@move].flagged
         print "You hit a bomb! You lose. \n"
         return true 

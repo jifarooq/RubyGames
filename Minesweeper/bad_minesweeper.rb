@@ -142,14 +142,3 @@ end
 
 player = Player.new
 player.play_game
-
-
-=begin
-method
-
-return found a number
-method(left)
-method(right)
-method(up)
-method(down)
-=end

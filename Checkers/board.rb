@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 # require_relative 'piece'
-# when testing, make sure requires aren't looping back and forth
 require_relative 'piece.rb'
 require 'colorize'
 
